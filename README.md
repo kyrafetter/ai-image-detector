@@ -1,4 +1,4 @@
-# ai-image-detector
+# AI-Image-Detector
 UC San Diego CSE 151A: ML Learning Algorithms Final Project
 
 
