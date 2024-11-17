@@ -4,8 +4,7 @@ UC San Diego CSE 151A: ML Learning Algorithms Final Project
 
 
 # Link to jupyter notebook: <br>
-https://github.com/kyrafetter/ai-image-detector/blob/main/notebooks/.ipynb_checkpoints/Milestone2-checkpoint.ipynb <br>
-
+https://github.com/kyrafetter/ai-image-detector/blob/Milestone3/notebooks/.ipynb_checkpoints/Milestone3-checkpoint.ipynb
 
 # Milestone 3: 
 
