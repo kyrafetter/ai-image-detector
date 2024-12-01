@@ -8,11 +8,40 @@ https://github.com/kyrafetter/ai-image-detector/tree/Milestone4
 
 # Milestone 4:
 
-## 2: Evaluate your model and compare training vs. test error
+## Milestone Updates
 
-## 3: Where does your model fit in the fitting graph? and What are the next models you are thinking of and why?
 
-## 4: Update your README.md
+* **Preprocessing- Guassian Noise:** (seemed to help improve 30img accaracy?)
+
+* **More Epochs:** For this model revision, we doubled the number of epochs from 5 to 10 in order to try and have more convergence in our loss, and achieve a higher accuracy, as recommended previously. While the model performance may still benefit from additional epochs- we haven't been able to run for additional epochs due to high runtime from computing hardware constraints- We did see some improvement in accuracy over last model.
+
+* **Adaptive Gradient:** This model revision, we implemented an adaptive learning rate which seeks to help the model fine-tune its learning and avoid potential oscilating accuracy with higher epoch numbers. Given that our epoch count is relatively lower, we decided to halve the learning rate at each step, in order to not make the training too dramatically slow. If this model were to be run on a computing cluster or similar, with higher epoch counts, this adaptive learning rate could potentially be tuned to be a much sharper dropoff, albeit at later epochs. It is also worther mentioning, the lower epoch count is somewhat less concerning, given that our large training data set leads to 375 gradient updates per epoch or 3750 total across 10 epochs (as discussed in Milestone 3), so there are still a large number of gradient updates occuring, just not with thefull dataset.
+
+* **Model Architecture:**
+
+* **Other Exploration:** (kfold, etc)
+
+
+
+## Milestone Questions
+
+### 2. Evaluate your model and compare training vs. test error
+
+Our model performs well currently, having the training error slightly higher than the test error. As discussed previously, we believe our large number of graident updates (375 per epoch) contributes to this.
+
+### 3. Where does your model fit in the fitting graph? and What are the next models you are thinking of and why?
+
+### 5. Conclusion section: What is the conclusion of your 2nd model? What can be done to possibly improve it? Note: The conclusion section should be it's own independent section. i.e. Methods: will have models 1 and 2 methods, Conclusion: will have models 1 and 2 results and discussion. 
+
+### 6. Provide predictions of correct and FP and FN from your test dataset.
+
+
+* Total Number of Testing Observations: 1200 
+* True Positives: 517
+* False Positives: 53
+* True Negatives: 530
+* False Negatives: 100
+* Predictions can also be seen in the Milestone4-checkpoint.ipynb notebook.
 
 
 
