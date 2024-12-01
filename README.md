@@ -11,13 +11,14 @@ https://github.com/kyrafetter/ai-image-detector/tree/Milestone4
 ## Milestone Updates
 
 
-* **Preprocessing- Guassian Noise:** For this model revision, we injected Gaussian Noise into all images (with a scaling factor of 0.1) in order to better mimic the noise present in natural image datasets and help our model become more robust and prevent overfitting. When this modification was exclusively tested on the 30 image dataset, it seemed to help improve model accuracy, increasing accuracy from 0.60 to 0.75. 
+* **Preprocessing- Guassian Noise:** For this model revision, we injected Gaussian Noise into all images (with a scaling factor of 0.1) in order to better mimic the noise present in natural image datasets and help our model become more robust and prevent overfitting. When this modification was exclusively tested on the 30 image dataset, it seemed to help improve model accuracy, increasing accuracy from 0.60 to 0.75.
 
 * **More Epochs:** For this model revision, we doubled the number of epochs from 5 to 10 in order to try and have more convergence in our loss, and achieve a higher accuracy, as recommended previously. While the model performance may still benefit from additional epochs- we haven't been able to run for additional epochs due to high runtime from computing hardware constraints- We did see some improvement in accuracy over last model.
 
 * **Adaptive Gradient:** This model revision, we implemented an adaptive learning rate which seeks to help the model fine-tune its learning and avoid potential oscilating accuracy with higher epoch numbers. Given that our epoch count is relatively lower, we decided to halve the learning rate at each step, in order to not make the training too dramatically slow. If this model were to be run on a computing cluster or similar, with higher epoch counts, this adaptive learning rate could potentially be tuned to be a much sharper dropoff, albeit at later epochs. It is also worther mentioning, the lower epoch count is somewhat less concerning, given that our large training data set leads to 375 gradient updates per epoch or 3750 total across 10 epochs (as discussed in Milestone 3), so there are still a large number of gradient updates occuring, just not with thefull dataset.
 
 * **Model Architecture:**
+Three model architecture updates were made on this iteration of the model. Firstly, we realized that our previous model was underfitting, so we need to make architecture updates that would increase model complexity and allow the model to see more complex features. To increase model complexity, we added more convolutional layers with more filters. Now, we have 128, 256, and 512 feature maps because of the added convolutional layers. Additionally, we tried to replicate behavior of more complex CNN models like ResNet to increase the complexity of our model. One idea we replicated from more complex architectures is Global Average Pooling (GAP). We added a layer for GAP that replaced a previous flattening layer. We decided to use GAP because it would allow the model to focus on global patterns in each image by aggregating spatial information across the feature map. Finally, we also incorporated a residual/skip connection. I added a skip connection from the output of the convolutional layer x2 and the convolutional layer x5. Essentially, I projected and resized the output x2 to match the number of channels in x5 through a 1 by 1 convolutional layer. Then, I added the x_skip layer, which is the transformed layer of x_2 to x_5 so that the features from the x_2 layer are added element wise to the features from x_skip. The goal with adding this skip connection is to ensure that information from earlier layers is passed forward to the later stages of the network so that the model can learn more low-level features for the earlier layers and allow feature reuse without creating too large of a network. 
 
 * **Other Exploration:** (kfold, etc)
 
@@ -27,16 +28,16 @@ https://github.com/kyrafetter/ai-image-detector/tree/Milestone4
 
 ### 2. Evaluate your model and compare training vs. test error
 
-Our model performs well currently, having the training error slightly higher than the test error. As discussed previously, we believe our large number of graident updates (375 per epoch) contributes to this.
+Our model performs well currently, having the training error slightly higher than the test error. As discussed previously, we believe our large number of gradient updates (375 per epoch) contributes to this.
 
 ### 3. Where does your model fit in the fitting graph? and What are the next models you are thinking of and why?
 
-### 5. Conclusion section: What is the conclusion of your 2nd model? What can be done to possibly improve it? Note: The conclusion section should be it's own independent section. i.e. Methods: will have models 1 and 2 methods, Conclusion: will have models 1 and 2 results and discussion. 
+### 5. Conclusion section: What is the conclusion of your 2nd model? What can be done to possibly improve it? Note: The conclusion section should be it's own independent section. i.e. Methods: will have models 1 and 2 methods, Conclusion: will have models 1 and 2 results and discussion.
 
 ### 6. Provide predictions of correct and FP and FN from your test dataset.
 
 
-* Total Number of Testing Observations: 1200 
+* Total Number of Testing Observations: 1200
 * True Positives: 517
 * False Positives: 53
 * True Negatives: 530
