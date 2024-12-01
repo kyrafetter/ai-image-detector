@@ -11,7 +11,7 @@ https://github.com/kyrafetter/ai-image-detector/tree/Milestone4
 ## Milestone Updates
 
 
-* **Preprocessing- Guassian Noise:** (seemed to help improve 30img accaracy?)
+* **Preprocessing- Guassian Noise:** For this model revision, we injected Gaussian Noise into all images (with a scaling factor of 0.1) in order to better mimic the noise present in natural image datasets and help our model become more robust and prevent overfitting. When this modification was exclusively tested on the 30 image dataset, it seemed to help improve model accuracy, increasing accuracy from 0.60 to 0.75. 
 
 * **More Epochs:** For this model revision, we doubled the number of epochs from 5 to 10 in order to try and have more convergence in our loss, and achieve a higher accuracy, as recommended previously. While the model performance may still benefit from additional epochs- we haven't been able to run for additional epochs due to high runtime from computing hardware constraints- We did see some improvement in accuracy over last model.
 
