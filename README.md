@@ -4,14 +4,29 @@ UC San Diego CSE 151A: ML Learning Algorithms Final Project
 
 
 # Link to jupyter notebook: <br>
-https://github.com/kyrafetter/ai-image-detector/blob/Milestone3/notebooks/.ipynb_checkpoints/Milestone3-checkpoint.ipynb
+https://github.com/kyrafetter/ai-image-detector/tree/Milestone4
 
-# Milestone 3: 
+# Milestone 4:
+
+## 2: Evaluate your model and compare training vs. test error
+
+## 3: Where does your model fit in the fitting graph? and What are the next models you are thinking of and why?
+
+## 4: Update your README.md
+
+
+
+
+
+
+
+
+# Milestone 3:
 
 ## Milestone Updates
 
-* **Pre-Processing-Overall :** In regard to pre-processing, we have implemented the steps that we proposed in Milestone 2. This includes pixel normalization, image zero-padding and re-sizing, and image imputation. 
-* **Pre-Processing- Normalization:** For pixel normalization, we used Min-Max Normalization to normalize all pixel values to 0-1 from 0-255. 
+* **Pre-Processing-Overall :** In regard to pre-processing, we have implemented the steps that we proposed in Milestone 2. This includes pixel normalization, image zero-padding and re-sizing, and image imputation.
+* **Pre-Processing- Normalization:** For pixel normalization, we used Min-Max Normalization to normalize all pixel values to 0-1 from 0-255.
 * **Pre-Processing- Padding:** In our project, we preprocess images by padding them with zeros to make them square before resizing, ensuring standardized dimensions. This approach preserves the original image values, as the padding does not alter the content of the images.
 * **Pre-Processing- Imputation:** For image imputation, we used inpainting to impute regions of images that were corrupted/truncated.
 * **Model Architecture:** Defined initial PyTorch model architecture and training, testing, and validation pipelines 5 epochs with a batch size of 32. Also added code for calculating metrics for precision, recall, F1, true positives, true negatives, false positives, false negatives, loss, accuracy, and graphs demonstrating changes in loss throughout model training and evaluation across iterations.
@@ -41,27 +56,27 @@ We saw that our inital model appears to perform quite well. As stated above, to 
 
 * **More epochs:** Training for more epochs would allow the model to continue learning, as the first couple of epochs will be needed just to reach a reasonable degree of accuracy, given the the model is randomly initialized. This is especially relevant because we chose to zero-pad non-square images so training for more epochs will enable the model to learn to ignore the zero-padding and to not use this feature when performing predictions.\
 <br>
-  
+
 * **Adaptive learning rate:** Combined with a larger number of epochs especially, an adaptive learning rate (or at least one which changes throughout training a few times) may improve model performance. As the model gets increasingly accurate during epochs, a reduction in learning rate allows it to learn more slowly and not skip over a potential minimum.\
 <br>
-  
-  
+
+
 * **Increase training dataset size:** Right now we include 9600 images in our training dataset, and 1200 in our validation and test sets respectively, for a total of 12000 images across the three datasets. Because we have access to 60000 total images in our Kaggle dataset, we can increase the size of our train, validation, and test datasets to give the model more data to work with while training, and potentially increase it's ability to make more nuanced predicitions on unseen data.\
 <br>
-  
+
 * **Randomize training data order:** We can randomize the order of the images in the training dataset, reshuffling between epochs, to avoid potential minor baises that may arise through the training data order.\
 <br>
-  
+
 * **Model Architecture:** We plan on adding more convolutional layers to our model. Currently, we only have three convolutional layers that have feature maps of sizes 3, 32, and 64. We would like to add another convolutional layer for 128 feature maps so we can extract more abstract features from our images deeper in the model. We may also add model layers that consider brightness and sharpness of the images because in our exploratory data analysis, we observed variations in brightness and sharpness between AI generated and real images. We would like to distinguish these features further using model layers that address these features specifically.\
 <br>
 
 * **K-fold Cross Validation:** K-fold cross-validation helps improve our CNN model by providing a robust evaluation of its performance across different subsets of the data, ensuring it generalizes well to unseen images. By training on multiple folds and averaging results, it reduces the risk of overfitting or underfitting specific data splits, leading to more reliable model tuning and selection. \
 <br>
-    
+
 * **Regularization:** We also plan to use regularization to help our model avoid overfitting. For example, we can use adversarial regularization to train the model not only with natural training data images but also perturbed data. By intentionally confusing the model with these perturbed images, we will encourage our model to become robust against adversarial perturbation and increase model performance.\
 <br>
-  
-  
+
+
 
 
 
