@@ -23,6 +23,10 @@ Three model architecture updates were made on this iteration of the model. First
 * **K-Fold Cross-Validation (k = 5):**
 To ensure the robustness and reliability of our model evaluation, we implemented a 5-fold cross-validation approach. This method allows us to assess model performance across multiple data splits, reducing the risk of overfitting to a specific subset of data and providing a more generalized measure of accuracy. By incorporating this method, we aimed to enhance the generalization capability of our model and provide a fair assessment of its performance across diverse data subsets.
 
+* **Other Exploration:**
+We also tried K fold clustering and tried to implement randomly flipping images to create noise. However, both of these approaches exceeded our computational capacity by taking nearly 15 hours to run. We were not sure if we implemented both methods incorrectly, so decided to remove them due to time constraints and only proceed with the modifications listed above. However, we left our code for K fold clustering at the bottom of the MS4 notebook for reference on future iterations. 
+
+
 
 
 ## Milestone Questions
