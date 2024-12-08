@@ -10,10 +10,17 @@ https://github.com/kyrafetter/ai-image-detector/blob/main/notebooks/.ipynb_check
 # Milestone 5/ Final Submission:
 
 
-## Introduction to Your Project 
+## Introduction
 
+Recent advances in generative AI technology, with the development and release of models such as DALL-E 3 and MidJourney, have led to an explosion of AI-generated images on social media platforms, making it increasingly difficult to trust the authenticity of posts. This proliferation of synthetic images has significant implications for the spread of misinformation and fake content, especially during critical periods such as elections. Our team is particularly concerned about the potential influence of AI-generated images on public opinion and their ability to cause confusion, particularly among the older generation, who may be more susceptible to trusting such content. Furthermore, in artistic spaces like r/wallpapers and other forums, the rising number of AI-generated submissions, often without proper tagging or disclosure, has sparked concerns about devaluing human creativity and effort.
 
+![](doc/lion.png)
 
+To address these challenges, we developed a machine learning model leveraging convolutional neural networks (CNNs) and computer vision techniques to classify images as either AI-generated or real. Such a model has the potential to enable automatic tagging of AI-generated images on social media and art platforms, ensuring transparency and preventing users from misconstruing AI-generated content as genuine.
+
+We utilized a Kaggle dataset comprising 30,000 real images from Pexels, Unsplash, and WikiArt, alongside 30,000 AI-generated images from Stable Diffusion, MidJourney, and DALL-E. Due to resource constraints, we selected a representative sample of 6,000 real and 6,000 AI-generated images for training and testing, focusing on various everyday objects such as animals, cars, and planes. Our preprocessing pipeline involved resizing images to a consistent dimension, normalizing pixel values to a [0, 1] range, labeling the images, and enhancing robustness through padding, Gaussian noise addition, and imputation.
+
+Using PyTorch, we built a CNN model comprising convolutional layers for feature extraction, max pooling for dimensionality reduction, and fully connected layers culminating in a binary classification output. Our model achieved a training accuracy of 89.16% and a testing accuracy of 87.25%. On a testing set of 1,200 observations, the model produced 517 true positives, 530 true negatives, 53 false positives, and 100 false negatives. These results demonstrate the potential of our approach in identifying and tagging AI-generated images to ensure transparency and maintain the integrity of online platforms.
 
 ## Methods
 
