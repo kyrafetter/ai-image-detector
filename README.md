@@ -32,7 +32,7 @@ The bar plot below graphs the distribution of classes on our whole dataset of 12
 
 *Image Corruption*
 
-Upon dataset exploration, we discovered that there is one image in the set of real 6,000 images under the filepath "images/real/5879.jpg" that is corrupt due to being truncated. 
+Upon dataset exploration, we discovered that there is one image in the set of real 6,000 images under the filepath "images/real/5879.jpg" that is corrupt due to being truncated.
 
 *Image Size*
 
@@ -77,10 +77,24 @@ We used the lists containing mean brightness values per image per class from the
 ![](doc/brightness_scatter.png)
 
 ### Pre-Processing: First Model
+For Model 1, we implemented pixel normalization, image zero-padding and re-sizing, and image imputation. Pixel normalization was performed using Min-Max Normalization to normalize all pixel values to 0-1 from 0-255. We preprocessed images by padding non-square images with zeros to make them square before resizing, ensuring standardized dimensions. This approach preserves the original image values, as the padding does not alter the content of the images. Once all images were padded to a square dimension, we applied a resizing operation to expand or shrink images to 1024*1024 pixels. For image imputation, we used inpainting to impute regions of images that were corrupted/truncated. We used Tensorflow ImageDataGenerator to perform our 80-20 train test split. The ImageDataGenerator was with configurations for binary classification, normalization, and 1024*1024 re-sizing (after padding the images), to streamline our data splitting and preprocessing steps. We then built our CNN using Tensorflow.
 ### First Model
-### Pre-Processing: Second Model
-### Second Model
+For model 1, we defined initial PyTorch model architecture and training, testing, and validation pipelines 5 epochs with a batch size of 32. We also added the framework for calculating metrics for precision, recall, F1, true positives, true negatives, false positives, false negatives, loss, accuracy, and graphs demonstrating changes in loss throughout model training and evaluation across iterations. This exact same model training and testing pipeline was leveraged for the entire project. The initial Pytorch model architecture is a Convolutional Neural Network (CNN) designed to classify images as either AI-generated or real. The architecture consists of three convolutional layers with 3×3 kernels and ReLU activation functions, each followed by a max-pooling layer to progressively reduce the spatial dimensions and extract hierarchical features. The first convolutional layer maps the input image's RGB channels to 32 feature maps, the second expands these to 64 feature maps, and the third further increases to 128 feature maps, capturing more complex patterns in the image. The output of the final convolutional layer is flattened into a 1D vector, which is passed through two fully connected layers to learn high-level representations and classify the image. A sigmoid activation at the output ensures the final prediction is a probability between 0 and 1, suitable for binary classification. This architecture balances complexity and computational efficiency, making it well-suited for distinguishing AI-generated images from real ones. The architecture diagram is displayed below to be replicated for future use cases.
 
+![](doc//Users/model1.png)
+
+### Pre-Processing: Second/Final Model
+For model 2, we injected Gaussian Noise into all images (with a scaling factor of 0.1) in order to better mimic the noise present in natural image datasets and help our model become more robust and prevent overfitting. When this modification was exclusively tested on the 30 image dataset, it seemed to help improve model accuracy, increasing accuracy from 0.60 to 0.75. This preprocessing step was performed in addition to the other preprocessing steps from model 1.
+
+### Second/Final Model
+For our second model, we added a series of improvements to specifically increase model complexity and aid with underfitting. First, we doubled the number of epochs from 5 to 10. We also implemented an adaptive learning rate that halves the learning rate at user-specified epoch numbers; a list is used to specify during which epochs the learning rate should be halved.
+
+Three model architecture updates were made on this iteration of the model. To increase model complexity, we added more convolutional layers with more filters. Now, we have 128, 256, and 512 feature maps because of the added convolutional layers. Additionally, we tried to replicate behavior of more complex CNN models like ResNet to increase the complexity of our model. One idea we replicated from more complex architectures is Global Average Pooling (GAP). We added a layer for GAP that replaced a previous flattening layer. Finally, we also incorporated a residual/skip connection. We added a skip connection from the output of the convolutional layer x2 and the convolutional layer x5. Essentially, we projected and resized the output x2 to match the number of channels in x5 through a 1 by 1 convolutional layer. Then, we added the x_skip layer, which is the transformed layer of x_2 to x_5 so that the features from the x_2 layer are added element wise to the features from x_skip. The final model architecture can be found in the diagram attached below in order to replicate the structure of the model.
+
+Overall Model 2 architecture breakdown: <br>
+This enhanced model architecture (V2) is designed to improve the classification of AI-generated images by increasing model complexity and addressing underfitting. It consists of five convolutional blocks, each incorporating batch normalization for stabilizing training, ReLU activations, and max-pooling for spatial downsampling. The architecture progressively increases the number of feature maps from 32 to 512, allowing it to capture more complex and abstract features. Two additional convolutional blocks were added to improve learning capacity and reduce underfitting. A global average pooling layer replaces flattening to reduce parameters and enhance generalization. Fully connected layers then refine the learned features, with the final layer using a sigmoid activation for binary classification. A residual connection projects intermediate features from an earlier layer directly to the final convolutional block, aiding gradient flow and improving feature retention. This V2 model architecture is designed to balance complexity and efficiency, leveraging advanced techniques to classify AI-generated images more effectively. The diagram for this model architecture is displayed below.
+
+![](doc//Users/model2.png)
 
 ## Results
 ### First Model
@@ -134,7 +148,7 @@ In our analysis, we noticed that our images have slight brightness, sharpness, a
 
 
 #### Guassian Blur
-We added Gaussian blur to our images to contribute to a more robust model training process. This better mimics the noise present in natural image datasets and helps our model become more robust and prevent overfitting. 
+We added Gaussian blur to our images to contribute to a more robust model training process. This better mimics the noise present in natural image datasets and helps our model become more robust and prevent overfitting.
 
 
 
@@ -143,22 +157,26 @@ We added Gaussian blur to our images to contribute to a more robust model traini
 For our first model iteration, we chose to maintain a simple model with only a few layers for simplicity sake, and this yielded good performance. In our second model, we hoped to increase the complexity of the model to learn more features, potentially allowing us to better learn differences between real and fake images. We ended up seeing a slight decrease in model performance, which we attribute to the addition of Gaussian noise requiring more epochs for effective learning, along with potentially premature adjustments in the adaptive learning rate, both of which could have impacted the overall performance, especially without additional tuning. Nevertheless, the model exhibited greater loss convergence, as reflected in the flattening of training and validation loss curves, indicating reduced underfitting.
 
 
-The most important feature we felt impacted our model performance with the epoch number. Our first model did surprisingly well with only 5 epochs, but the added complexity of the second model may have meant that more epochs would have helped, especially in tweaking the learning rate; changing the learning rate in the early epochs may have contributed to slower learning, hence potentially reduced performance. The main limitation of the epoch count was hardware constraints, as we did not get the chance to run the model on higher performance hardware. Despite these limitations, however, we still felt our model was performing well, and could certainly improve with improvements such as epoch count, learning rate tweaking, etc. to learn the added noise and allow the model to be more robust.
+For our final model, we made a series of improvements to increase the complexity of our model to help with underfitting. The first change we made is adding more epochs. We doubled the number of epochs from 5 to 10 in order to try and have more convergence in our loss, and achieve a higher accuracy without underfitting.
+
+We also implemented an adaptive learning rate which seeks to help the model fine-tune its learning and avoid potential oscillating accuracy with higher epoch numbers. Given that our epoch count is relatively lower, we decided to halve the learning rate at each step, in order to not make the training too dramatically slow. If this model were to be run on a computing cluster or similar, with higher epoch counts, this adaptive learning rate could potentially be tuned to be a much sharper dropoff, albeit at later epochs. It is also worth mentioning, the lower epoch count is somewhat less concerning, given that our large training data set leads to 375 gradient updates per epoch or 3750 total across 10 epochs (as discussed in Milestone 3), so there are still a large number of gradient updates occuring, just not with the full dataset.
+
+Three model architecture updates were made on this iteration of the model. Firstly, we realized that our previous model was underfitting, so we need to make architecture updates that would increase model complexity and allow the model to see more complex features. To increase model complexity, we added more convolutional layers with more filters. Now, we have 128, 256, and 512 feature maps because of the added convolutional layers. Additionally, we tried to replicate behavior of more complex CNN models like ResNet to increase the complexity of our model. One idea we replicated from more complex architectures is Global Average Pooling (GAP). We added a layer for GAP that replaced a previous flattening layer. We decided to use GAP because it would allow the model to focus on global patterns in each image by aggregating spatial information across the feature map. Finally, we also incorporated a residual/skip connection. We added a skip connection from the output of the convolutional layer x2 and the convolutional layer x5. Essentially, we projected and resized the output x2 to match the number of channels in x5 through a 1 by 1 convolutional layer. Then, I added the x_skip layer, which is the transformed layer of x_2 to x_5 so that the features from the x_2 layer are added element wise to the features from x_skip. The goal with adding this skip connection is to ensure that information from earlier layers is passed forward to the later stages of the network so that the model can learn more low-level features for the earlier layers and allow feature reuse without creating too large of a network. The model architecture can be found in the diagram attached below in order to replicate the structure of the model.
 
 
-
+Overall, the most important feature we felt impacted our model performance with the epoch number. Our first model did surprisingly well with only 5 epochs, but the added complexity of the second model may have meant that more epochs would have helped, especially in tweaking the learning rate; changing the learning rate in the early epochs may have contributed to slower learning, hence potentially reduced performance. The main limitation of the epoch count was hardware constraints, as we did not get the chance to run the model on higher performance hardware. Despite these limitations, however, we still felt our model was performing well, and could certainly improve with improvements such as epoch count, learning rate tweaking, etc. to learn the added noise and allow the model to be more robust.
 
 ## Conclusion
 
 For future directions, we would like to increase the size of our training dataset. Due to computational restraints, we used a subset of the original Kaggle dataset of 12,000 images, split 80-20 for training and validation. We predict that we may be able to achieve higher validation accuracy if we can increase the number (and thus diversity) of images in the training set.
 
-Additionally, we would like to train our model using more epochs in order to give the model more time to reach a global loss minimum. Due to computational resource limitations, we were only able to run approximately 10 epochs and saw some evidence of underfitting. Therefore, it would be advantageous to run at least 20 epochs when performing model training. 
+Additionally, we would like to train our model using more epochs in order to give the model more time to reach a global loss minimum. Due to computational resource limitations, we were only able to run approximately 10 epochs and saw some evidence of underfitting. Therefore, it would be advantageous to run at least 20 epochs when performing model training.
 
-Given these future directions, we feel that the most immediate next step would be to translate our current local set-up to a computer cluster like the SDSC in order to be able to access the computational resources required for these more computationally demanding tasks. 
+Given these future directions, we feel that the most immediate next step would be to translate our current local set-up to a computer cluster like the SDSC in order to be able to access the computational resources required for these more computationally demanding tasks.
 
 We also attempted to implement K-Fold Cross-Validation during milestone 4 via a 5-fold cross-validation approach. By incorporating this method, we aimed to enhance the generalization capability of our model and provide a fair assessment of its performance across diverse data subsets. However, K fold cross validation seemed to exceed computational capacity by taking over 15 hours to run (the run could not be completed). We were not sure if there may have been some issue with K-fold interacting with our model, so decided to remove it due to time constraints and only proceed with the modifications listed above. Therefore, in future iterations of this project, it would be interesting to look at implementing K fold cross validation again (our code for K fold clustering is at the bottom of the MS4 notebook for reference on potential future iterations).
 
-Additionally, our model right now only incorporates some aspects of complex model architectures like ResNet, which are more frequently used for image segmentation and image classification tasks. Currently, our model only has several convolutional layers and one residual layer, we would like to possibly incorporate more complex model layers and architecture design similar to ResNet to improve our model complexity and applicability to the AI generated image classification task in the future. 
+Additionally, our model right now only incorporates some aspects of complex model architectures like ResNet, which are more frequently used for image segmentation and image classification tasks. Currently, our model only has several convolutional layers and one residual layer, we would like to possibly incorporate more complex model layers and architecture design similar to ResNet to improve our model complexity and applicability to the AI generated image classification task in the future.
 
 In the age of generative AI, it has become increasingly necessary to be able to differentiate between AI-generated images and real images, particularly in the realm of social media platforms, with important implications in misinformation spread and proper credit attribution. In response, our team has developed a preliminary machine learning model leveraging a CNN model architecture to perform binary classification on image input to determine if images are synthetic (AI-generated) or real. While future work is needed to more robustly train the model, we believe that the model we present here provides a notable first step towards being able to accurately differentiate between synthetic and real images in the public sphere.
 
@@ -171,24 +189,24 @@ Overall, most tasks were done as a collective group or agreed upon as a collecti
 
 
 
-Aatash Pestonjamasp: 
+Aatash Pestonjamasp:
 * Investigation into image sizing and distribution across both classes
 * Joining together sections of notebook
 * Contributions on Readme sections
 * Model progress recovery implementation
 * Randomized dataset splitting implementation
-* Investigating varied epoch numbers for training  
-* Adding adaptive learning rate 
-* Running model training and analysis 
+* Investigating varied epoch numbers for training
+* Adding adaptive learning rate
+* Running model training and analysis
 
 
-Shreya Velagala: 
-* Image brightness and sharpness analysis across both classes for exploratory data analysis 
+Shreya Velagala:
+* Image brightness and sharpness analysis across both classes for exploratory data analysis
 * Designed and implemented model architecture and data loading pipeline with PyTorch and the initial Tensorflow model
-* Designed and implemented a complete evaluation pipeline for training and testing with testing, training, validation loss and precision, recall, FP, FN, TP, TN metrics 
-* Revamped model architecture for model 2 using global average pooling, increasing convolutional layers, and adding residual connections 
-* Created diagrams for convolutional neural networks 
-* Organized team meetings and allocated team tasks 
+* Designed and implemented a complete evaluation pipeline for training and testing with testing, training, validation loss and precision, recall, FP, FN, TP, TN metrics
+* Revamped model architecture for model 2 using global average pooling, increasing convolutional layers, and adding residual connections
+* Created diagrams for convolutional neural networks
+* Organized team meetings and allocated team tasks
 
 
 Kenzo Ku:
@@ -196,7 +214,7 @@ Kenzo Ku:
 * Ensured uniform image dimensions by implementing zero-padding
 * Reduced risk of overfitting by testing across diverse splits, using k-fold cross validation method where k=5
 * Implemented data augmentation to increase the size and diversity of the dataset
-* Readme sections contribution 
+* Readme sections contribution
 
 
 Kyra Fetter:
@@ -204,7 +222,7 @@ Kyra Fetter:
 * Exploration of image corruption and RGB color analysis for both classes for the Data Exploration milestone
 * Implemented image imputation to recover corrupted images in the dataset
 * Implemented Gaussian noise injection as an additional pre-processing step for Model 2
-* Contributions to the README for all milestones 
+* Contributions to the README for all milestones
 * Organized team meetings and attended office hours to ask project questions where necessary
 
 
@@ -240,7 +258,7 @@ Kyra Fetter:
 Three model architecture updates were made on this iteration of the model. Firstly, we realized that our previous model was underfitting, so we need to make architecture updates that would increase model complexity and allow the model to see more complex features. To increase model complexity, we added more convolutional layers with more filters. Now, we have 128, 256, and 512 feature maps because of the added convolutional layers. Additionally, we tried to replicate behavior of more complex CNN models like ResNet to increase the complexity of our model. One idea we replicated from more complex architectures is Global Average Pooling (GAP). We added a layer for GAP that replaced a previous flattening layer. We decided to use GAP because it would allow the model to focus on global patterns in each image by aggregating spatial information across the feature map. Finally, we also incorporated a residual/skip connection. I added a skip connection from the output of the convolutional layer x2 and the convolutional layer x5. Essentially, I projected and resized the output x2 to match the number of channels in x5 through a 1 by 1 convolutional layer. Then, I added the x_skip layer, which is the transformed layer of x_2 to x_5 so that the features from the x_2 layer are added element wise to the features from x_skip. The goal with adding this skip connection is to ensure that information from earlier layers is passed forward to the later stages of the network so that the model can learn more low-level features for the earlier layers and allow feature reuse without creating too large of a network.
 
 * **K-Fold Cross-Validation (k = 5):**
-To ensure the robustness and reliability of our model evaluation, we implemented a 5-fold cross-validation approach. This method allows us to assess model performance across multiple data splits, reducing the risk of overfitting to a specific subset of data and providing a more generalized measure of accuracy. By incorporating this method, we aimed to enhance the generalization capability of our model and provide a fair assessment of its performance across diverse data subsets. However, K fold cross validation seemed to exceed computational capacity by taking nearly 15 hours to run. We were not sure if we implemented K fold wrong, so decided to remove it due to time constraints and only proceed with the modifications listed above. However, we left our code for K fold clustering at the bottom of the MS4 notebook for reference on future iterations. 
+To ensure the robustness and reliability of our model evaluation, we implemented a 5-fold cross-validation approach. This method allows us to assess model performance across multiple data splits, reducing the risk of overfitting to a specific subset of data and providing a more generalized measure of accuracy. By incorporating this method, we aimed to enhance the generalization capability of our model and provide a fair assessment of its performance across diverse data subsets. However, K fold cross validation seemed to exceed computational capacity by taking nearly 15 hours to run. We were not sure if we implemented K fold wrong, so decided to remove it due to time constraints and only proceed with the modifications listed above. However, we left our code for K fold clustering at the bottom of the MS4 notebook for reference on future iterations.
 
 
 
