@@ -23,14 +23,72 @@ We utilized a Kaggle dataset comprising 30,000 real images from Pexels, Unsplash
 Using PyTorch, we built a CNN model comprising convolutional layers for feature extraction, max pooling for dimensionality reduction, and fully connected layers culminating in a binary classification output. Our model achieved a training accuracy of 89.16% and a testing accuracy of 87.25%. On a testing set of 1,200 observations, the model produced 517 true positives, 530 true negatives, 53 false positives, and 100 false negatives. These results demonstrate the potential of our approach in identifying and tagging AI-generated images to ensure transparency and maintain the integrity of online platforms.
 
 ## Methods
+### Data Exploration
+*Class Distribution*
 
+The bar plot below graphs the distribution of classes on our whole dataset of 12,000 images. This plot demonstrates that we have 6,000 images in each class and two separate classes, one for AI-generated images and one for real images. Therefore, we do not have class imbalance. Class 0 represents the AI-generated images and there are 6,000 AI-generated images. Class 1 represents real images and there are 6,000 real images. The class distribution as 0 and 1 was decided by the binary classifier used in our configuration setting for the Tensorflow ImageDataGenerator object which selected the first directory, fake images, in our images directory as class 0 and the second directory, real images, as our class 1.
 
+![](doc/class_distribution.png)
 
+*Image Corruption*
+
+Upon dataset exploration, we discovered that there is one image in the set of real 6,000 images under the filepath "images/real/5879.jpg" that is corrupt due to being truncated. 
+
+*Image Size*
+
+For the consideration of image sizing and potential resizing need and strategy, we examined the distribution of image sizes. When running this analysis on our 12,000 images, we noticed some clear trends. The distribution of real images had a much larger spread when compared to that of AI, and also seems to follow two common aspect ratios (indicated by the two trend lines we see in real images).
+
+![](doc/image_size.png)
+
+![](doc/aspect_ratio.png)
+
+In terms of how we might consider mitigating this, we will likely be considering some form of resizing. This would need to occur regardless due to the Convolutional Neural Networks using fixed sized filters, which would likely make it difficult for the model to learn patterns; at the very least, varied sizes to actually train upon could introduce another dimension of error. However, knowing the original size may be a helpful feature, given the strong patterns we see above.
+
+In order to resize to a consistent standard, we will consider potentially cropping images or zero padding to fit aspect ratios, which could be a standard procedure of each image prior to being fed into the model. For some images, given that we have images as large as 12000x12000 or 10000x14000, we may need to resize down to a smaller size, such as 1024x1024 or even 512x512. We may also consider adding max pooling layers inside the CNN in order to resize the image and extract information within the CNN, rather than losing image data before the CNN.
+
+*Pixel Values*
+
+In this analysis, we explored the distributions of color intensities for each of the three color channels (red, green, and blue) across the image dataset, comparing real images and AI-generated images.
+
+The first figure displays the distribution (density) of each color channel across all pixels aggregated across real (solid line) and fake (dashed line) images respectively. We see that color intensity values fall within the range of 0 to 255, inclusive. All three color channels demonstrate a similar trend in that fake images seem to have a great proportion of low-valued color intensities while real images have a similar spike but at high-valued color intensities, and both share a moderate peak at around 25. This may indicate that AI-generated images tend to either be darker or are composed of more primary/solid colors compared to real images.
+
+The next two figures show the distribution of the mean or median color intensity for a given color channel across images where the image index is on the x-axis and the color intensity is on the y-axis. Please note that intensities are sorted, hence the monotonically increasing plot. The real and AI-generated trend lines show a similar shape; however, it seems that a larger proportion of AI-generated images have slightly higher pixel intensities for the three channels in the mid-intensity range while real images have higher intensity at the ends of the intensity spectrum.
+
+![](doc/rgb_distribution.png)
+
+*Image Sharpness*
+
+To analyze image sharpness quantitatively, we utilized the Laplacian method in OpenCV to emphasize areas with rapid intensity changes, which often correspond to edges and details in the image. Using cv2.Laplacian(img, cv2.CV_64F), we computed the Laplacian of each image, highlighting areas with rapid intensity changes (i.e., edges and details). Calculating the variance of the Laplacian values (via .var()) serves as an effective measure of sharpness. Higher variance suggests a sharper image, as more edges and details are present. Lower variance indicates a blurrier image with fewer intense changes in pixel values, resulting in a smoother appearance.
+
+![](doc/image_sharpness.png)
+
+AI-generated images tended to have higher sharpness on average (indicated by a higher mean sharpness). This could imply that AI models are tuned to produce images that appear more defined or crisp. The lower standard deviation in AI-generated images implied that the sharpness is more consistent across the dataset, with fewer variations in sharpness levels compared to real images. The higher median in AI-generated images suggested that even the "middle" sharpness values in AI images are higher than those in real images, reinforcing the consistency in sharpness across AI images. This analysis suggested AI images are optimized for sharper, more consistent quality, whereas real images display a broader range of sharpness, likely due to diverse conditions in real-life photography (lighting, focus, etc.).
+
+*Image Brightness*
+
+We performed brightness analysis contrasting the AI-generated and real images. We iterated through each image in our dataset and converted the image to gray scale. Converting the image to gray scale allows each pixel value of the image to be a brightness value by removing the RGB color channels and converting to a single color channel. For each image, we used the mean of the pixel values for a single grayscale channel to calculate the general brightness of each image.
+
+We computed both the mean brightness for each image in the AI-generated and real classes and the mean of each of these lists to get the general brightness of each class. Based on the bar plot and scatter plot, it seems that the real images are generally slightly brighter than the AI-generated images.
+
+We used the lists containing mean brightness values per image per class from the previous bar graph to plot the brightness of each image differentiated by blue for real images and orange for AI-generated images. It seems that the general brightness of both classes is intermixed with no clear distinguishing factor. However, there are a few outliers in the real images that exceed the 250 mean brightness level, so it could be that real images are slightly brighter than AI-generated images.
+
+![](doc/avg_brightness.png)
+
+![](doc/brightness_scatter.png)
+
+### Pre-Processing: First Model
+### First Model
+### Pre-Processing: Second Model
+### Second Model
 
 
 ## Results
-### First model
+### First Model
 In the first model, we implemented a robust preprocessing pipeline that included pixel normalization using Min-Max scaling (0-255 to 0-1), image zero-padding and resizing for standardized dimensions, and inpainting-based image imputation to handle corrupted or truncated regions. Our initial model architecture, developed in PyTorch, consisted of three convolutional layers with feature map sizes of 3, 32, and 64. The model was trained, validated, and tested over five epochs with a batch size of 32, yielding a total of 1,875 gradient updates during training. We evaluated the model using metrics such as precision, recall, F1-score, true/false positives, true/false negatives, loss, and accuracy, and visualized loss progression during training and validation.
+
+![](doc/model1_accuracy.png)
+
+![](doc/model1_loss.png)
 
 The results demonstrated strong model performance. On the training dataset, the model achieved a loss of 0.2306 and an accuracy of 90.70%, with precision, recall, and F1-score of 88.15%, 94.07%, and 91.01%, respectively. The confusion matrix revealed 4,522 true positives, 608 false positives, 4,185 true negatives, and 285 false negatives, out of a total of 9,600 training observations.
 
@@ -38,12 +96,16 @@ On the test dataset, the model achieved a loss of 0.2531 and an accuracy of 89.3
 
 The slight differences in performance between training and test datasets highlight a well-generalized model with minimal overfitting. The high number of gradient updates during training contributed to the model's stability and optimization.
 
-### Second model
+### Second Model
 For our second model iteration, we introduced several enhancements to improve robustness and address the underfitting observed in our initial implementation. Preprocessing improvements included injecting Gaussian noise with a scaling factor of 0.1, which better mimicked the noise in natural image datasets and reduced overfitting. This step increased model accuracy on a 30-image test dataset from 0.60 to 0.75. Additionally, the number of training epochs was doubled from 5 to 10, resulting in greater convergence in the loss curves and overall improved performance, despite computational constraints. To refine training dynamics, we implemented an adaptive learning rate that halved the rate at each step, ensuring efficient computation while avoiding oscillations in accuracy. The model architecture was significantly enhanced to increase complexity and improve feature extraction. Convolutional layers with 128, 256, and 512 feature maps were added, alongside advanced architecture concepts inspired by ResNet, such as Global Average Pooling (GAP) to aggregate spatial information and skip connections to pass information from earlier to later layers. These changes enhanced the model's ability to detect both low- and high-level features, resulting in a more nuanced understanding of the data. Although a 5-fold cross-validation approach was initially implemented to ensure robust evaluation, computational limitations led to its exclusion in this iteration. The corresponding code, however, remains available in the project repository for future use.
 
 The second model achieved a training loss of 0.2589 and a training accuracy of 89.17%, reflecting strong performance. Precision, recall, and F1-score were 91.66%, 86.16%, and 88.83%, respectively. The confusion matrix for the training dataset showed 4,134 true positives, 376 false positives, 4,426 true negatives, and 664 false negatives out of 9,600 observations. On the test dataset, the model achieved a loss of 0.3086 and an accuracy of 87.25%. Precision, recall, and F1-score were 90.70%, 83.79%, and 87.11%, respectively. The confusion matrix revealed 517 true positives, 53 false positives, 530 true negatives, and 100 false negatives out of 1,200 testing observations.
 
 The fitting graph showed that training and validation losses began to converge toward the later epochs, reflecting reduced underfitting and improved generalization compared to the first model. However, there remains a slight gap between training and testing performance, suggesting the potential for further tuning. Hyperparameter optimization was performed to refine model performance, particularly focusing on learning rate scheduling, batch size adjustments, and the number of epochs. These efforts were designed to balance the trade-offs between convergence speed and the model's capacity to generalize effectively across datasets.
+
+![](doc/model2_accuracy.png)
+
+![](doc/model2_loss.png)
 
 To further improve the model, we plan to expand the training epochs to allow the model to better learn the added noise and achieve higher performance, adjust the adaptive learning rate schedule to better accommodate extended training, and augment the dataset with additional transformations such as flips and rotations to enhance feature detection. Further architectural modifications, such as introducing additional skip connections and re-evaluating the GAP layer versus flattening, may also optimize feature extraction. These strategies, combined with continued hyperparameter tuning and analysis of the fitting graph, aim to build on the strong foundation of the second model and address the slight performance gaps observed, ensuring better robustness and generalization in subsequent iterations.
 
