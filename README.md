@@ -114,13 +114,18 @@ This enhanced model architecture (V2) is designed to improve the classification 
 ### First Model
 In the first model, we implemented a robust preprocessing pipeline that included pixel normalization using Min-Max scaling (0-255 to 0-1), image zero-padding and resizing for standardized dimensions, and inpainting-based image imputation to handle corrupted or truncated regions. Our initial model architecture, developed in PyTorch, consisted of three convolutional layers with feature map sizes of 3, 32, and 64. The model was trained, validated, and tested over five epochs with a batch size of 32, yielding a total of 1,875 gradient updates during training. We evaluated the model using metrics such as precision, recall, F1-score, true/false positives, true/false negatives, loss, and accuracy, and visualized loss progression during training and validation.
 
+Training vs Validation accuracy:
 ![](doc/model1_accuracy.png)
 
+Training vs Validation loss graph:
 ![](doc/model1_loss.png)
 
 The results demonstrated strong model performance. On the training dataset, the model achieved a loss of 0.2306 and an accuracy of 90.70%, with precision, recall, and F1-score of 88.15%, 94.07%, and 91.01%, respectively. The confusion matrix revealed 4,522 true positives, 608 false positives, 4,185 true negatives, and 285 false negatives, out of a total of 9,600 training observations.
 
 On the test dataset, the model achieved a loss of 0.2531 and an accuracy of 89.33%, with precision, recall, and F1-score of 86.34%, 93.95%, and 89.98%, respectively. The confusion matrix showed 575 true positives, 91 false positives, 497 true negatives, and 37 false negatives, from a total of 1,200 testing observations.
+
+model metrics:
+![](doc/first-model-metrics.png)
 
 The slight differences in performance between training and test datasets highlight a well-generalized model with minimal overfitting. The high number of gradient updates during training contributed to the model's stability and optimization.
 
@@ -129,10 +134,15 @@ For our second model iteration, we introduced several enhancements to improve ro
 
 The second model achieved a training loss of 0.2589 and a training accuracy of 89.17%, reflecting strong performance. Precision, recall, and F1-score were 91.66%, 86.16%, and 88.83%, respectively. The confusion matrix for the training dataset showed 4,134 true positives, 376 false positives, 4,426 true negatives, and 664 false negatives out of 9,600 observations. On the test dataset, the model achieved a loss of 0.3086 and an accuracy of 87.25%. Precision, recall, and F1-score were 90.70%, 83.79%, and 87.11%, respectively. The confusion matrix revealed 517 true positives, 53 false positives, 530 true negatives, and 100 false negatives out of 1,200 testing observations.
 
+model metrics:
+![](doc/second-model-metrics.png)
+
 The fitting graph showed that training and validation losses began to converge toward the later epochs, reflecting reduced underfitting and improved generalization compared to the first model. However, there remains a slight gap between training and testing performance, suggesting the potential for further tuning. Hyperparameter optimization was performed to refine model performance, particularly focusing on learning rate scheduling, batch size adjustments, and the number of epochs. These efforts were designed to balance the trade-offs between convergence speed and the model's capacity to generalize effectively across datasets.
 
+Training vs Validation accuracy:
 ![](doc/model2_accuracy.png)
 
+Training vs Validation loss:
 ![](doc/model2_loss.png)
 
 To further improve the model, we plan to expand the training epochs to allow the model to better learn the added noise and achieve higher performance, adjust the adaptive learning rate schedule to better accommodate extended training, and augment the dataset with additional transformations such as flips and rotations to enhance feature detection. Further architectural modifications, such as introducing additional skip connections and re-evaluating the GAP layer versus flattening, may also optimize feature extraction. These strategies, combined with continued hyperparameter tuning and analysis of the fitting graph, aim to build on the strong foundation of the second model and address the slight performance gaps observed, ensuring better robustness and generalization in subsequent iterations.
