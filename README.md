@@ -226,7 +226,7 @@ Aatash Pestonjamasp:
 
 Shreya Velagala:
 * Image brightness and sharpness analysis across both classes for exploratory data analysis
-* Designed and implemented model architecture and data loading pipeline with PyTorch and the initial Tensorflow model
+* Designed and implemented model architecture and data loading pipeline with PyTorch. Also built the initial Tensorflow model architecture that was eventually removed to move forward with a PyTorch approach. 
 * Designed and implemented a complete evaluation pipeline for training and testing with testing, training, validation loss and precision, recall, FP, FN, TP, TN metrics
 * Revamped model architecture for model 2 using global average pooling, increasing convolutional layers, and adding residual connections
 * Created diagrams for convolutional neural networks
