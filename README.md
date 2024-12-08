@@ -124,7 +124,7 @@ The results demonstrated strong model performance. On the training dataset, the 
 
 On the test dataset, the model achieved a loss of 0.2531 and an accuracy of 89.33%, with precision, recall, and F1-score of 86.34%, 93.95%, and 89.98%, respectively. The confusion matrix showed 575 true positives, 91 false positives, 497 true negatives, and 37 false negatives, from a total of 1,200 testing observations.
 
-model metrics:
+first model metrics:
 ![](doc/first-model-metrics.png)
 
 The slight differences in performance between training and test datasets highlight a well-generalized model with minimal overfitting. The high number of gradient updates during training contributed to the model's stability and optimization.
@@ -134,7 +134,7 @@ For our second model iteration, we introduced several enhancements to improve ro
 
 The second model achieved a training loss of 0.2589 and a training accuracy of 89.17%, reflecting strong performance. Precision, recall, and F1-score were 91.66%, 86.16%, and 88.83%, respectively. The confusion matrix for the training dataset showed 4,134 true positives, 376 false positives, 4,426 true negatives, and 664 false negatives out of 9,600 observations. On the test dataset, the model achieved a loss of 0.3086 and an accuracy of 87.25%. Precision, recall, and F1-score were 90.70%, 83.79%, and 87.11%, respectively. The confusion matrix revealed 517 true positives, 53 false positives, 530 true negatives, and 100 false negatives out of 1,200 testing observations.
 
-model metrics:
+second model metrics:
 ![](doc/second-model-metrics.png)
 
 The fitting graph showed that training and validation losses began to converge toward the later epochs, reflecting reduced underfitting and improved generalization compared to the first model. However, there remains a slight gap between training and testing performance, suggesting the potential for further tuning. Hyperparameter optimization was performed to refine model performance, particularly focusing on learning rate scheduling, batch size adjustments, and the number of epochs. These efforts were designed to balance the trade-offs between convergence speed and the model's capacity to generalize effectively across datasets.
