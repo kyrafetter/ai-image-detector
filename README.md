@@ -22,22 +22,121 @@ https://github.com/kyrafetter/ai-image-detector/blob/main/notebooks/.ipynb_check
 
 
 ## Results
+### First model
+In the first model, we implemented a robust preprocessing pipeline that included pixel normalization using Min-Max scaling (0-255 to 0-1), image zero-padding and resizing for standardized dimensions, and inpainting-based image imputation to handle corrupted or truncated regions. Our initial model architecture, developed in PyTorch, consisted of three convolutional layers with feature map sizes of 3, 32, and 64. The model was trained, validated, and tested over five epochs with a batch size of 32, yielding a total of 1,875 gradient updates during training. We evaluated the model using metrics such as precision, recall, F1-score, true/false positives, true/false negatives, loss, and accuracy, and visualized loss progression during training and validation.
+
+The results demonstrated strong model performance. On the training dataset, the model achieved a loss of 0.2306 and an accuracy of 90.70%, with precision, recall, and F1-score of 88.15%, 94.07%, and 91.01%, respectively. The confusion matrix revealed 4,522 true positives, 608 false positives, 4,185 true negatives, and 285 false negatives, out of a total of 9,600 training observations.
+
+On the test dataset, the model achieved a loss of 0.2531 and an accuracy of 89.33%, with precision, recall, and F1-score of 86.34%, 93.95%, and 89.98%, respectively. The confusion matrix showed 575 true positives, 91 false positives, 497 true negatives, and 37 false negatives, from a total of 1,200 testing observations.
+
+The slight differences in performance between training and test datasets highlight a well-generalized model with minimal overfitting. The high number of gradient updates during training contributed to the model's stability and optimization.
+
+### Second model
+For our second model iteration, we introduced several enhancements to improve robustness and address the underfitting observed in our initial implementation. Preprocessing improvements included injecting Gaussian noise with a scaling factor of 0.1, which better mimicked the noise in natural image datasets and reduced overfitting. This step increased model accuracy on a 30-image test dataset from 0.60 to 0.75. Additionally, the number of training epochs was doubled from 5 to 10, resulting in greater convergence in the loss curves and overall improved performance, despite computational constraints. To refine training dynamics, we implemented an adaptive learning rate that halved the rate at each step, ensuring efficient computation while avoiding oscillations in accuracy. The model architecture was significantly enhanced to increase complexity and improve feature extraction. Convolutional layers with 128, 256, and 512 feature maps were added, alongside advanced architecture concepts inspired by ResNet, such as Global Average Pooling (GAP) to aggregate spatial information and skip connections to pass information from earlier to later layers. These changes enhanced the model's ability to detect both low- and high-level features, resulting in a more nuanced understanding of the data. Although a 5-fold cross-validation approach was initially implemented to ensure robust evaluation, computational limitations led to its exclusion in this iteration. The corresponding code, however, remains available in the project repository for future use.
+
+The second model achieved a training loss of 0.2589 and a training accuracy of 89.17%, reflecting strong performance. Precision, recall, and F1-score were 91.66%, 86.16%, and 88.83%, respectively. The confusion matrix for the training dataset showed 4,134 true positives, 376 false positives, 4,426 true negatives, and 664 false negatives out of 9,600 observations. On the test dataset, the model achieved a loss of 0.3086 and an accuracy of 87.25%. Precision, recall, and F1-score were 90.70%, 83.79%, and 87.11%, respectively. The confusion matrix revealed 517 true positives, 53 false positives, 530 true negatives, and 100 false negatives out of 1,200 testing observations.
+
+The fitting graph showed that training and validation losses began to converge toward the later epochs, reflecting reduced underfitting and improved generalization compared to the first model. However, there remains a slight gap between training and testing performance, suggesting the potential for further tuning. Hyperparameter optimization was performed to refine model performance, particularly focusing on learning rate scheduling, batch size adjustments, and the number of epochs. These efforts were designed to balance the trade-offs between convergence speed and the model's capacity to generalize effectively across datasets.
+
+To further improve the model, we plan to expand the training epochs to allow the model to better learn the added noise and achieve higher performance, adjust the adaptive learning rate schedule to better accommodate extended training, and augment the dataset with additional transformations such as flips and rotations to enhance feature detection. Further architectural modifications, such as introducing additional skip connections and re-evaluating the GAP layer versus flattening, may also optimize feature extraction. These strategies, combined with continued hyperparameter tuning and analysis of the fitting graph, aim to build on the strong foundation of the second model and address the slight performance gaps observed, ensuring better robustness and generalization in subsequent iterations.
 
 
 
 
 ## Discussion
 
+### Overview
+For our project, our initial decision to build a CNN-based model for AI image detection was driven by the idea that a more complex model may be needed in order to discern differences between the image classes properly. We felt that a CNN-based model would allow for the learning of much more complex features vs other models, such as logistic regression or others, due to the convolution of the images being performed.
+
+
+
+### Pre-Processing
+
+#### Imputation
+As mentioned in our methods, we did need to impute a corrupted image in order to have our model accept it and not crash. We chose to impute rather than swap an image, as we felt this would maintain the general distribution of image types in the dataset. This of course did come with the cost of introducing an image which may be less-than-representative of a normal real image, potentially introducing data bias in a different manner. We feel that, given the large sample of images and random distribution of train, validation, and test, any potential risk of bias would not be large for our results.
+
+
+#### Resizing
+After performing a sizing analysis, we noticed our images are of varying non-square shapes. Hence, in order for the batch processing of images in our CNN to work effectively, we resize our images to uniform size. This may cause some loss in image information, however, since our images are of varying sizes and tend to be relatively large, resizing the images to be smaller is a critical step for running the CNN; we seemed to still see reasonably good model performance regardless. Additionally, because the AI generated images tend to have color, sharpness, and brightness differences from real images, we believe that losing some image information should not prevent detection of these differentiating factors between images.
+
+
+#### Normalization
+In our analysis, we noticed that our images have slight brightness, sharpness, and RGB differences between AI generated and real images. In order for these differences to be effectively and clearly differentiated by our CNN, we chose to normalize the RGB values of the pixel values. This also ensures that we work with smaller gradients during backpropagation allowing CNNs to train faster and more effectively as input data has a consistent and smaller scale. Finally, because we have brightness and color variations between AI generated and real images, normalizing the RGB values reduces the effect of these differences allowing the CNN to learn meaningful patterns along with intensity variations across the dataset rather than fully relying on brightness and RGB.
+
+
+#### Guassian Blur
+We added Gaussian blur to our images to contribute to a more robust model training process. This better mimics the noise present in natural image datasets and helps our model become more robust and prevent overfitting. 
+
+
+
+### Model Contruction/ Architecture
+
+For our first model iteration, we chose to maintain a simple model with only a few layers for simplicity sake, and this yielded good performance. In our second model, we hoped to increase the complexity of the model to learn more features, potentially allowing us to better learn differences between real and fake images. We ended up seeing a slight decrease in model performance, which we attribute to the addition of Gaussian noise requiring more epochs for effective learning, along with potentially premature adjustments in the adaptive learning rate, both of which could have impacted the overall performance, especially without additional tuning. Nevertheless, the model exhibited greater loss convergence, as reflected in the flattening of training and validation loss curves, indicating reduced underfitting.
+
+
+The most important feature we felt impacted our model performance with the epoch number. Our first model did surprisingly well with only 5 epochs, but the added complexity of the second model may have meant that more epochs would have helped, especially in tweaking the learning rate; changing the learning rate in the early epochs may have contributed to slower learning, hence potentially reduced performance. The main limitation of the epoch count was hardware constraints, as we did not get the chance to run the model on higher performance hardware. Despite these limitations, however, we still felt our model was performing well, and could certainly improve with improvements such as epoch count, learning rate tweaking, etc. to learn the added noise and allow the model to be more robust.
+
 
 
 
 ## Conclusion
+
+For future directions, we would like to increase the size of our training dataset. Due to computational restraints, we used a subset of the original Kaggle dataset of 12,000 images, split 80-20 for training and validation. We predict that we may be able to achieve higher validation accuracy if we can increase the number (and thus diversity) of images in the training set.
+
+Additionally, we would like to train our model using more epochs in order to give the model more time to reach a global loss minimum. Due to computational resource limitations, we were only able to run approximately 10 epochs and saw some evidence of underfitting. Therefore, it would be advantageous to run at least 20 epochs when performing model training. 
+
+Given these future directions, we feel that the most immediate next step would be to translate our current local set-up to a computer cluster like the SDSC in order to be able to access the computational resources required for these more computationally demanding tasks. 
+
+We also attempted to implement K-Fold Cross-Validation during milestone 4 via a 5-fold cross-validation approach. By incorporating this method, we aimed to enhance the generalization capability of our model and provide a fair assessment of its performance across diverse data subsets. However, K fold cross validation seemed to exceed computational capacity by taking over 15 hours to run (the run could not be completed). We were not sure if we implemented K fold wrong, so decided to remove it due to time constraints and only proceed with the modifications listed above. Therefore, in future iterations of this project, it would be interesting to look at implmenting K fold cross validation again (our code for K fold clustering is at the bottom of the MS4 notebook for reference on potential future iterations).
+
+Additionally, our model right now only incorporates some aspects of complex model architectures like ResNet, which are more frequently used for image segmentation and image classification tasks. Currently, our model only has several convolutional layers and one residual layer, we would like to possibly incorporate more complex model layers and architecture design similar to ResNet to improve our model complexity and applicability to the AI generated image classification task in the future. 
+
+In the age of generative AI, it has become increasingly necessary to be able to differentiate between AI-generated images and real images, particularly in the realm of social media platforms, with important implications in misinformation spread and proper credit attribution. In response, our team has developed a preliminary machine learning model leveraging a CNN model architecture to perform binary classification on image input to determine if images are synthetic (AI-generated) or real. While future work is needed to more robustly train the model, we believe that the model we present here provides a notable first step towards being able to accurately differentiate between synthetic and real images in the public sphere.
 
 
 
 
 ## Statement of Collaboration
 
+Overall, most tasks were done as a collective group or agreed upon as a collective group. We would frequently meet in order to touch base and distribute how we should make progress with the project, assigning components as needed. We did not explicitly assign roles such as leader, manager, writer, etc, but rather generally had people work on various sections of the project, and contribute to different sections of the writeups/ other logistics. Some person-specific contributions are listed below.
+
+
+
+Aatash Pestonjamasp: 
+* Investigation into image sizing and distribution across both classes
+* Joining together sections of notebook
+* Contributions on Readme sections
+* Model progress recovery implementation
+* Randomized dataset splitting implementation
+* Investigating varied epoch numbers for training  
+* Adding adaptive learning rate 
+* Running model training and analysis 
+
+
+Shreya Velagala: 
+* Image brightness and sharpness analysis across both classes for exploratory data analysis 
+* Designed and implemented model architecture and data loading pipeline with PyTorch and the initial Tensorflow model
+* Designed and implemented a complete evaluation pipeline for training and testing with testing, training, validation loss and precision, recall, FP, FN, TP, TN metrics 
+* Revamped model architecture for model 2 using global average pooling, increasing convolutional layers, and adding residual connections 
+* Created diagrams for convolutional neural networks 
+* Organized team meetings and allocated team tasks 
+
+
+Kenzo Ku:
+* Conducted exploratory data analysis focusing on image sharpness for both AI and real images
+* Ensured uniform image dimensions by implementing zero-padding
+* Reduced risk of overfitting by testing across diverse splits, using k-fold cross validation method where k=5
+* Implemented data augmentation to increase the size and diversity of the dataset
+* Readme sections contribution 
+
+
+Kyra Fetter:
+* Initial drafts of the project abstract
+* Exploration of image corruption and RGB color analysis for both classes for the Data Exploration milestone
+* Implemented image imputation to recover corrupted images in the dataset
+* Implemented Gaussian noise injection as an additional pre-processing step for Model 2
+* Contributions to the README for all milestones 
+* Organized team meetings and attended office hours to ask project questions where necessary
 
 
 
