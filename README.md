@@ -7,10 +7,36 @@ UC San Diego CSE 151A: ML Learning Algorithms Final Project
 https://github.com/kyrafetter/ai-image-detector/blob/main/notebooks/.ipynb_checkpoints/Milestone5-Final-checkpoint.ipynb
 
 
+# Milestone 5/ Final Submission:
+
+
+## Introduction to Your Project 
 
 
 
 
+## Methods
+
+
+
+
+
+## Results
+
+
+
+
+## Discussion
+
+
+
+
+## Conclusion
+
+
+
+
+## Statement of Collaboration
 
 
 
