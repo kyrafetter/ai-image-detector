@@ -45,7 +45,7 @@ For the consideration of image sizing and potential resizing need and strategy, 
 
 In terms of how we might consider mitigating this, we will likely be considering some form of resizing. This would need to occur regardless due to the Convolutional Neural Networks using fixed sized filters, which would likely make it difficult for the model to learn patterns; at the very least, varied sizes to actually train upon could introduce another dimension of error. However, knowing the original size may be a helpful feature, given the strong patterns we see above.
 
-In order to resize to a consistent standard, we will consider potentially cropping images or zero padding to fit aspect ratios, which could be a standard procedure of each image prior to being fed into the model. For some images, given that we have images as large as 12000x12000 or 10000x14000, we may need to resize down to a smaller size, such as 1024x1024 or even 512x512. We may also consider adding max pooling layers inside the CNN in order to resize the image and extract information within the CNN, rather than losing image data before the CNN.
+In order to resize to a consistent standard, we will consider potentially cropping images or zero padding to fit aspect ratios, which could be a standard procedure of each image prior to being fed into the model. For some images, given that we have images as large as 12000x12000 or 10000x14000, we may need to resize down to a smaller size, such as 1024x1024 or even 128x128. We may also consider adding max pooling layers inside the CNN in order to resize the image and extract information within the CNN, rather than losing image data before the CNN.
 
 *Pixel Values*
 
@@ -82,13 +82,13 @@ For Model 1, we implemented pixel normalization, image zero-padding and re-sizin
 
 ![](doc/image_padding.png)
 
-Once all images were padded to a square dimension, we applied a resizing operation to expand or shrink images to 1024*1024 pixels. For image imputation, we used inpainting to impute regions of images that were corrupted/truncated.
+Once all images were padded to a square dimension, we applied a resizing operation to expand or shrink images to 128*128 pixels. For image imputation, we used inpainting to impute regions of images that were corrupted/truncated.
 
 ![](doc/imputed_image_raw.png)
 
 ![](doc/imputed_image.png)
 
-We used Tensorflow ImageDataGenerator to perform our 80-20 train test split. The ImageDataGenerator was with configurations for binary classification, normalization, and 1024*1024 re-sizing (after padding the images), to streamline our data splitting and preprocessing steps. We then built our CNN using Tensorflow.
+We used Tensorflow ImageDataGenerator to perform our 80-20 train test split. The ImageDataGenerator was with configurations for binary classification, normalization, and 128*128 re-sizing (after padding the images), to streamline our data splitting and preprocessing steps. We then built our CNN using Tensorflow.
 
 ### First Model
 For model 1, we defined initial PyTorch model architecture and training, testing, and validation pipelines 5 epochs with a batch size of 32. We also added the framework for calculating metrics for precision, recall, F1, true positives, true negatives, false positives, false negatives, loss, accuracy, and graphs demonstrating changes in loss throughout model training and evaluation across iterations. This exact same model training and testing pipeline was leveraged for the entire project. We trained the model with a learning rate of 0.001 using the Adam optimizer and evaluated performance using Binary Cross Entropy Loss. The initial Pytorch model architecture is a Convolutional Neural Network (CNN) designed to classify images as either AI-generated or real. The architecture consists of three convolutional layers with 3×3 kernels and ReLU activation functions, each followed by a max-pooling layer to progressively reduce the spatial dimensions and extract hierarchical features. The first convolutional layer maps the input image's RGB channels to 32 feature maps, the second expands these to 64 feature maps, and the third further increases to 128 feature maps, capturing more complex patterns in the image. The output of the final convolutional layer is flattened into a 1D vector, which is passed through two fully connected layers to learn high-level representations and classify the image. A sigmoid activation at the output ensures the final prediction is a probability between 0 and 1, suitable for binary classification. This architecture balances complexity and computational efficiency, making it well-suited for distinguishing AI-generated images from real ones. The architecture diagram is displayed below to be replicated for future use cases.
@@ -247,6 +247,7 @@ Kyra Fetter:
 * Exploration of image corruption and RGB color analysis for both classes for the Data Exploration milestone
 * Implemented image imputation to recover corrupted images in the dataset
 * Implemented Gaussian noise injection as an additional pre-processing step for Model 2
+* Model architecture diagrams for final write-up
 * Contributions to the README for all milestones
 * Organized team meetings and attended office hours to ask project questions where necessary
 
@@ -387,10 +388,10 @@ that is corrupt due to being truncated halfway. We have three options for cleani
 ### 2 - Resizing and Padding the Images: <br>
 After performing a sizing analysis, we noticed our images are of varying non-square shapes. Hence, for batch processing/simultaneously processing groups of images in our CNN to work effectively, we need to resize our images to uniform size. <br>
 a - Our largest images are in the 10000-14000 range, which are too large for a CNN with minimal computational capacity to process. Therefore, we will be replacing the largest outlier images with smaller images from the unused images in the remaining portion of the 60k dataset. <br>
-b - We plan to resize our images to 1024 * 1024 pixels, so we will pad images smaller than this size to be 1024 * 1024 in order for these images to be used in batch processing with the remaining images. This could introduce noise to our CNN by having empty portions in our images, but this is the only process for us to maintain balance between the varying image dimensions in our dataset as we have both large and small images.  <br>
-c - Any images that are non-square and larger than 1024 * 1024 will be resized to 1024 * 1024. This may cause some loss in image information, however, since our images are of varying sizes and tend to be relatively large, our only option is to resize the images to be smaller with the limited timeframe and compute resources we have for the execution of our project. Additionally, because the AI generated images tend to have color, sharpness, and brighntess differences from real images, we believe that loosing some image information should not prevent detection of these differentiating factors between images. <br>
+b - We plan to resize our images to 128x128 pixels, so we will pad images smaller than this size to be 128x128 in order for these images to be used in batch processing with the remaining images. This could introduce noise to our CNN by having empty portions in our images, but this is the only process for us to maintain balance between the varying image dimensions in our dataset as we have both large and small images.  <br>
+c - Any images that are non-square and larger than 128x128 will be resized to 128x128. This may cause some loss in image information, however, since our images are of varying sizes and tend to be relatively large, our only option is to resize the images to be smaller with the limited timeframe and compute resources we have for the execution of our project. Additionally, because the AI generated images tend to have color, sharpness, and brighntess differences from real images, we believe that loosing some image information should not prevent detection of these differentiating factors between images. <br>
 
-* Note: We chose 1024 by 1024 because this is a common size that CNN kernels can handle effectively with limited computate resources and because a significant amount of our images cluser around the 2000 by 2000 pixel range. <br>
+* Note: We chose 128x128 because this is a common size that CNN kernels can handle effectively with limited computate resources. <br>
 
 
 ### 3 - Normalizing the Images RGB pixels: <br>
@@ -402,5 +403,5 @@ In our analysis, we noticed that our images have slight brightness, sharpness, a
 
 ### 4 - Train Test Split Using Tensorflow ImageDataGenerator: <br>
 
-We will use the Tensorflow ImageDataGenerator to perform our 80-20 train test split. The ImageDataGenerator will also be set with configurations for binary classfication, normalization, and 1024 by 1024 sizing (post padding the images), to streamline our data splitting and preprocessing steps. We will then build our CNN using Tensorflow. <br>
+We will use the Tensorflow ImageDataGenerator to perform our 80-20 train test split. The ImageDataGenerator will also be set with configurations for binary classfication, normalization, and 128x128 sizing (post padding the images), to streamline our data splitting and preprocessing steps. We will then build our CNN using Tensorflow. <br>
 
