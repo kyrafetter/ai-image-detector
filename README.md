@@ -216,7 +216,8 @@ Overall, most tasks were done as a collective group or agreed upon as a collecti
 Aatash Pestonjamasp:
 * Investigation into image sizing and distribution across both classes
 * Joining together sections of notebook
-* Contributions on Readme sections
+* Contributions on all Readme sections
+* Initial PyTorch model exploration
 * Model progress recovery implementation
 * Randomized dataset splitting implementation
 * Investigating varied epoch numbers for training
