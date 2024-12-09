@@ -95,6 +95,8 @@ For model 1, we defined initial PyTorch model architecture and training, testing
 
 ![](doc/model1.png)
 
+![](doc/model1_diagram.png)
+
 ### Pre-Processing: Second/Final Model
 For model 2, we injected Gaussian Noise into all images (with a scaling factor of 0.1) in order to better mimic the noise present in natural image datasets and help our model become more robust and prevent overfitting. When this modification was exclusively tested on the 30 image dataset, it seemed to help improve model accuracy, increasing accuracy from 0.60 to 0.75. This preprocessing step was performed in addition to the other preprocessing steps from model 1 with the exact same parameters, optimization, and loss function as specified in the preprocessing from the model 1 design above. 
 
@@ -109,6 +111,8 @@ Overall Model 2 architecture breakdown: <br>
 This enhanced model architecture (V2) is designed to improve the classification of AI-generated images by increasing model complexity and addressing underfitting. It consists of five convolutional blocks, each incorporating batch normalization for stabilizing training, ReLU activations, and max-pooling for spatial downsampling. The architecture progressively increases the number of feature maps from 32 to 512, allowing it to capture more complex and abstract features. Two additional convolutional blocks were added to improve learning capacity and reduce underfitting. A global average pooling layer replaces flattening to reduce parameters and enhance generalization. Fully connected layers then refine the learned features, with the final layer using a sigmoid activation for binary classification. A residual connection projects intermediate features from an earlier layer directly to the final convolutional block, aiding gradient flow and improving feature retention. This V2 model architecture is designed to balance complexity and efficiency, leveraging advanced techniques to classify AI-generated images more effectively. The diagram for this model architecture is displayed below.
 
 ![](doc/model2.png)
+
+![](doc/model2_diagram.png)
 
 ## Results
 ### First Model
