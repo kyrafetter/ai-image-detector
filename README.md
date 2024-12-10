@@ -272,7 +272,8 @@ Overall, most tasks were done as a collective group or agreed upon as a collecti
 
 
 
-
+# ALL PREVIOUS MILESTONES BELOW 
+## (instructions did not explicitly state to remove the previous milestones, so we have left them as a separate section below this header. Above this header is our milestone 5 submission) 
 # Milestone 4:
 
 ## Milestone Updates
