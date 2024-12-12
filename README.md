@@ -23,7 +23,7 @@ We utilized a Kaggle dataset comprising 30,000 real images from Pexels, Unsplash
 
 Using PyTorch, we built a CNN model comprising convolutional layers for feature extraction, max pooling for dimensionality reduction, and fully connected layers culminating in a binary classification output. Our model achieved a training accuracy of 89.16% and a testing accuracy of 87.25%. On a testing set of 1,200 observations, the model produced 517 true positives, 530 true negatives, 53 false positives, and 100 false negatives. These results demonstrate the potential of our approach in identifying and tagging AI-generated images to ensure transparency and maintain the integrity of online platforms.
 
-## Methods 
+## Methods
 ### Data Exploration
 *Class Distribution*
 
@@ -78,7 +78,7 @@ We used the lists containing mean brightness values per image per class from the
 ![](doc/brightness_scatter.png)
 
 ### Pre-Processing: First Model
-For Model 1, we implemented pixel normalization, image zero-padding and re-sizing, and image imputation. Pixel normalization was performed using Min-Max Normalization to normalize all pixel values to 0-1 from 0-255. We preprocessed images by padding non-square images with zeros to make them square before resizing, ensuring standardized dimensions. This approach preserves the original image values, as the padding does not alter the content of the images. 
+For Model 1, we implemented pixel normalization, image zero-padding and re-sizing, and image imputation. Pixel normalization was performed using Min-Max Normalization to normalize all pixel values to 0-1 from 0-255. We preprocessed images by padding non-square images with zeros to make them square before resizing, ensuring standardized dimensions. This approach preserves the original image values, as the padding does not alter the content of the images.
 
 ![](doc/image_padding.png)
 
@@ -98,7 +98,7 @@ For model 1, we defined initial PyTorch model architecture and training, testing
 ![](doc/model1_diagram.png)
 
 ### Pre-Processing: Second/Final Model
-For model 2, we injected Gaussian Noise into all images (with a scaling factor of 0.1) in order to better mimic the noise present in natural image datasets and help our model become more robust and prevent overfitting. When this modification was exclusively tested on the 30 image dataset, it seemed to help improve model accuracy, increasing accuracy from 0.60 to 0.75. This preprocessing step was performed in addition to the other preprocessing steps from model 1 with the exact same parameters, optimization, and loss function as specified in the preprocessing from the model 1 design above. 
+For model 2, we injected Gaussian Noise into all images (with a scaling factor of 0.1) in order to better mimic the noise present in natural image datasets and help our model become more robust and prevent overfitting. When this modification was exclusively tested on the 30 image dataset, it seemed to help improve model accuracy, increasing accuracy from 0.60 to 0.75. This preprocessing step was performed in addition to the other preprocessing steps from model 1 with the exact same parameters, optimization, and loss function as specified in the preprocessing from the model 1 design above.
 
 ![](doc/image_noise.png)
 
@@ -149,9 +149,8 @@ Training vs Validation accuracy:
 Training vs Validation loss:
 ![](doc/model2_loss.png)
 
-To further improve the model, we plan to expand the training epochs to allow the model to better learn the added noise and achieve higher performance, adjust the adaptive learning rate schedule to better accommodate extended training, and augment the dataset with additional transformations such as flips and rotations to enhance feature detection. Further architectural modifications, such as introducing additional skip connections and re-evaluating the GAP layer versus flattening, may also optimize feature extraction. These strategies, combined with continued hyperparameter tuning and analysis of the fitting graph, aim to build on the strong foundation of the second model and address the slight performance gaps observed, ensuring better robustness and generalization in subsequent iterations.
-
-
+#### Second/Final Model: Increasing from 10 to 20 epochs
+To further improve the model, we ran our training on 20 epochs to see if our model would converge and reduce underfitting. The results for this run can be seen below. With additional epochs, it seems that our model training accuracy increased by about 2.5%, however, the testing accuracy decreased by about 1.5%. Therefore, our model may be at risk of overfitting. However, training and validation loss graphs seem to demonstrate lack of convergence as the validation loss seems to diverge. It seems that there is a spike in validation loss towards the end, however, this could be an indication of needing more epochs to see if the loss decreases as the loss is inconsistent throughout the 20 epochs. We decided to proceed with our 10 epoch model as our 20 epoch did not demonstrate convergence with our current model architecure. We believe that if we make changes to our model architecture, a 20 epoch training could potentially perform better, but our current model architecture doesn't lead to convergence within 20 epochs. It took over 6 hours to run 20 epochs and our computers didn't have the computational capacity to handle more time, so we were unable to run beyond 20 epochs.
 
 
 ## Discussion
@@ -231,7 +230,7 @@ Overall, most tasks were done as a collective group or agreed upon as a collecti
 
 **Shreya Velagala:**
 * Image brightness and sharpness analysis across both classes for exploratory data analysis
-* Designed and implemented model architecture and data loading pipeline with PyTorch. Also built the initial Tensorflow model architecture that was eventually removed to move forward with a PyTorch approach. 
+* Designed and implemented model architecture and data loading pipeline with PyTorch. Also built the initial Tensorflow model architecture that was eventually removed to move forward with a PyTorch approach.
 * Designed and implemented a complete evaluation pipeline for training and testing with testing, training, validation loss and precision, recall, FP, FN, TP, TN metrics
 * Revamped model architecture for model 2 using global average pooling, increasing convolutional layers, and adding residual connections
 * Created diagrams for convolutional neural networks
@@ -272,8 +271,8 @@ Overall, most tasks were done as a collective group or agreed upon as a collecti
 
 
 
-# ALL PREVIOUS MILESTONES BELOW 
-## instructions did not explicitly state that the previous milestones should be removed, so we left them below this header as a separate section. Above this header is our milestone 5/final submission. 
+# ALL PREVIOUS MILESTONES BELOW
+## instructions did not explicitly state that the previous milestones should be removed, so we left them below this header as a separate section. Above this header is our milestone 5/final submission.
 # Milestone 4:
 
 ## Milestone Updates
