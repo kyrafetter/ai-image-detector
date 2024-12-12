@@ -128,8 +128,11 @@ The results demonstrated strong model performance. On the training dataset, the 
 
 On the test dataset, the model achieved a loss of 0.2531 and an accuracy of 89.33%, with precision, recall, and F1-score of 86.34%, 93.95%, and 89.98%, respectively. The confusion matrix showed 575 true positives, 91 false positives, 497 true negatives, and 37 false negatives, from a total of 1,200 testing observations.
 
-First Model Metrics:
-![](doc/first-model-metrics.png)
+First Model Training Metrics:
+![](doc/model1_training_metrics.png)
+
+First Model Testing Metrics:
+![](doc/model1_testing_metrics.png)
 
 The slight differences in performance between training and test datasets highlight a well-generalized model with minimal overfitting. The high number of gradient updates during training contributed to the model's stability and optimization.
 
@@ -138,8 +141,11 @@ For our second model iteration, we introduced several enhancements to improve ro
 
 The second model achieved a training loss of 0.2589 and a training accuracy of 89.17%, reflecting strong performance. Precision, recall, and F1-score were 91.66%, 86.16%, and 88.83%, respectively. The confusion matrix for the training dataset showed 4,134 true positives, 376 false positives, 4,426 true negatives, and 664 false negatives out of 9,600 observations. On the test dataset, the model achieved a loss of 0.3086 and an accuracy of 87.25%. Precision, recall, and F1-score were 90.70%, 83.79%, and 87.11%, respectively. The confusion matrix revealed 517 true positives, 53 false positives, 530 true negatives, and 100 false negatives out of 1,200 testing observations.
 
-Second Model Metrics:
-![](doc/second-model-metrics.png)
+Second Model Training Metrics:
+![](doc/model2_training_metrics.png)
+
+Second Model Testing Metrics:
+![](doc/model2_testing_metrics.png)
 
 The fitting graph showed that training and validation losses began to converge toward the later epochs, reflecting reduced underfitting and improved generalization compared to the first model. However, there remains a slight gap between training and testing performance, suggesting the potential for further tuning. Hyperparameter optimization was performed to refine model performance, particularly focusing on learning rate scheduling, batch size adjustments, and the number of epochs. These efforts were designed to balance the trade-offs between convergence speed and the model's capacity to generalize effectively across datasets.
 
@@ -152,6 +158,18 @@ Training vs Validation loss:
 #### Second/Final Model: Increasing from 10 to 20 epochs
 To further improve the model, we ran our training on 20 epochs to see if our model would converge and reduce underfitting. The results for this run can be seen below. With additional epochs, it seems that our model training accuracy increased by about 2.5%, however, the testing accuracy decreased by about 1.5%. Therefore, our model may be at risk of overfitting. However, training and validation loss graphs seem to demonstrate lack of convergence as the validation loss seems to diverge. It seems that there is a spike in validation loss towards the end, however, this could be an indication of needing more epochs to see if the loss decreases as the loss is inconsistent throughout the 20 epochs. We decided to proceed with our 10 epoch model as our 20 epoch did not demonstrate convergence with our current model architecure. We believe that if we make changes to our model architecture, a 20 epoch training could potentially perform better, but our current model architecture doesn't lead to convergence within 20 epochs. It took over 6 hours to run 20 epochs and our computers didn't have the computational capacity to handle more time, so we were unable to run beyond 20 epochs.
 
+Training vs Validation accuracy: 
+![](doc/model2_20epochs_accuracy.png)
+
+Training vs Validation loss: 
+
+![](doc/model2_20epoches_loss.png)
+
+Second Model (20 epochs) Training Metrics:
+![](doc/model2_20epoches_training_metrics.png)
+
+Second Model (20 epochs) Testing Metrics:
+![](doc/model2_20epochs_testing_metrics.png)
 
 ## Discussion
 
