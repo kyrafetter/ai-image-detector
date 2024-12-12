@@ -156,7 +156,7 @@ Training vs Validation loss:
 ![](doc/model2_loss.png)
 
 #### Second/Final Model: Increasing from 10 to 20 epochs
-To further improve the model, we ran our training on 20 epochs to see if our model would converge and reduce underfitting. The results for this run can be seen below. With additional epochs, it seems that our model training accuracy increased by about 2.5%, however, the testing accuracy decreased by about 1.5%. Therefore, our model may be at risk of overfitting. However, training and validation loss graphs seem to demonstrate lack of convergence as the validation loss seems to diverge. It seems that there is a spike in validation loss towards the end, however, this could be an indication of needing more epochs to see if the loss decreases as the loss is inconsistent throughout the 20 epochs. We decided to proceed with our 10 epoch model as our 20 epoch did not demonstrate convergence with our current model architecure. We believe that if we make changes to our model architecture, a 20 epoch training could potentially perform better, but our current model architecture doesn't lead to convergence within 20 epochs. It took over 6 hours to run 20 epochs and our computers didn't have the computational capacity to handle more time, so we were unable to run beyond 20 epochs.
+To further improve the model, we ran our training on 20 epochs, also delaying the learning rate adjustmentm to see if our model would converge and reduce underfitting. The results for this run can be seen below. With the changes, it seems that our model training accuracy increased by about 4% and the testing accuracy increased around 0.58%. Given the larger gap between training and testing accuracy, our model may be at risk of overfitting when using 20 epochs. The training and validation loss graphs seem to demonstrate lack of convergence as the validation loss seems to diverge. It seems that there is a spike in validation loss towards the end, however, this could be an indication of needing more epochs to see if the loss decreases as the loss is inconsistent throughout the 20 epochs. We decided to proceed with our 10 epoch model as our 20 epoch had a risk of overfitting and lack of convergence in accuracy and loss. We believe that if we make changes to our model architecture, a 20 epoch training could potentially perform better, but our current model architecture doesn't lead to convergence within 20 epochs. It took over 6 hours to run 20 epochs and our computers didn't have the computational capacity to handle more time, so we were unable to run beyond 20 epochs.
 
 Training vs Validation accuracy: 
 ![](doc/model2_20epochs_accuracy.png)
@@ -211,6 +211,9 @@ Three model architecture updates were made on this iteration of the model. First
 
 Overall, the most important feature we felt impacted our model performance with the epoch number. Our first model did surprisingly well with only 5 epochs, but the added complexity of the second model may have meant that more epochs would have helped, especially in tweaking the learning rate; changing the learning rate in the early epochs may have contributed to slower learning, hence potentially reduced performance. The main limitation of the epoch count was hardware constraints, as we did not get the chance to run the model on higher performance hardware. Despite these limitations, however, we still felt our model was performing well, and could certainly improve with improvements such as epoch count, learning rate tweaking, etc. to learn the added noise and allow the model to be more robust.
 
+One note regarding the above, is that we did see slightly better performance on our second model after doubling the number of epochs and delaying the learning rate change. The theory was that the higher number of epochs would allow the model more time ot learn, and delaying the learning rate would prevent learning speed changes too quickly. However, we also saw our model to had a seemingly higher risk of overfitting, due to a larger gap between training and validation data. To deal with this in the future, additional epochs could be helpful in smoothing out the more general trends of our loss and accuracy graphs. Additionally, tweaking the architecture and layer structuring could potentially help to improve our results.
+
+
 ## Conclusion
 
 For future directions, we would like to increase the size of our training dataset. Due to computational restraints, we used a subset of the original Kaggle dataset of 12,000 images, split 80-20 for training and validation. We predict that we may be able to achieve higher validation accuracy if we can increase the number (and thus diversity) of images in the training set.
@@ -244,6 +247,7 @@ Overall, most tasks were done as a collective group or agreed upon as a collecti
 * Investigating varied epoch numbers for training
 * Adding adaptive learning rate
 * Running model training and analysis
+* Exploration of running model 2 with 20 epochs and adjusted learning rate
 
 
 **Shreya Velagala:**
