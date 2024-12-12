@@ -140,19 +140,16 @@ The model architecture was significantly enhanced to increase complexity and imp
 
 The second model achieved a training loss of 0.1734 and a training accuracy of 93.18%, reflecting strong performance. Precision, recall, and F1-score were 91.27%, 95.48%, and 93.33%, respectively. The confusion matrix for the training dataset showed 4,581 true positives, 438 false positives, 4,364 true negatives, and 217 false negatives out of 9,600 observations. On the test dataset, the model achieved a loss of 0.3190 and an accuracy of 87.83%. Precision, recall, and F1-score were 86.18%, 90.92%, and 88.49%, respectively. The confusion matrix revealed 561 true positives, 90 false positives, 493 true negatives, and 56 false negatives out of 1,200 testing observations.
 
-Second Model Metrics for training data:
-![](doc/second-model-metrics2.png)
-
-Second Model Metrics for Test data:
-![](doc/second-model-metrics-test.png)
+Second Model Metrics:
+![](doc/second-model-metrics.png)
 
 The fitting graph showed that training and validation losses began to converge toward the later epochs, reflecting reduced underfitting and improved generalization compared to the first model. However, there remains a slight gap between training and testing performance, suggesting the potential for further tuning. Hyperparameter optimization was performed to refine model performance, particularly focusing on learning rate scheduling, batch size adjustments, and the number of epochs. These efforts were designed to balance the trade-offs between convergence speed and the model's capacity to generalize effectively across datasets.
 
 Training vs Validation accuracy:
-![](doc/model2_accuracy2.png)
+![](doc/model2_accuracy.png)
 
 Training vs Validation loss:
-![](doc/model2_loss2.png)
+![](doc/model2_loss.png)
 
 To further improve the model, we plan to expand the training epochs to allow the model to better learn the added noise and achieve higher performance, adjust the adaptive learning rate schedule to better accommodate extended training, and augment the dataset with additional transformations such as flips and rotations to enhance feature detection. Further architectural modifications, such as introducing additional skip connections and re-evaluating the GAP layer versus flattening, may also optimize feature extraction. These strategies, combined with continued hyperparameter tuning and analysis of the fitting graph, aim to build on the strong foundation of the second model and address the slight performance gaps observed, ensuring better robustness and generalization in subsequent iterations.
 
